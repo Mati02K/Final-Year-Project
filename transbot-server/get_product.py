@@ -1,14 +1,14 @@
 import boto3
 
-db = boto3.resource('dynamodb')
-table = db.Table('products_table')
+class Products:
+    def __init__(self):
+        self.db = boto3.resource('dynamodb')
+        self.table = self.db.Table('products_table')
 
-# response = table.get_item(
-#     Key = {
-#         'pid' : 101
-#     }
-# )
-
-response = table.scan()
-
-print(response)
+    def scan(self):
+        responses = self.table.scan()
+        for response in responses['Items']:
+            response['pid'] = int(response['pid'])
+            response['stock'] = int(response['stock'])
+            response['price'] = int(response['price'])
+        return responses
