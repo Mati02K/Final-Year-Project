@@ -4,8 +4,8 @@ from exceptionClasses import AuthError
 from order import Order
 from checkout import Checkout
 from get_product import Products
-import botocore
 import mysql.connector
+from botocore.exceptions import ClientError, ParamValidationError
 
 app = Flask(__name__)
 
@@ -20,11 +20,10 @@ def retreive():
         items = p.scan()
         return items
 
-    except botocore.exceptions.ClientError as error:
-        # Put your error handling logic here
+    except ClientError as error:
         print(error)
 
-    except botocore.exceptions.ParamValidationError as error:
+    except ParamValidationError as error:
         print('The parameters you provided are incorrect: {}'.format(error))
 
 @app.route('/checkout',methods = ['POST'])
@@ -51,7 +50,7 @@ def update():
         c = Checkout()
         res = c.update()
         return res
-    except mysql.connector.Error as e:
+    except (ClientError, mysql.connector.Error) as e:
         print(e)
         return e
 
