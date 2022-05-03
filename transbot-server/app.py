@@ -1,4 +1,5 @@
 from flask import Flask, request
+from flask_cors import CORS
 from email_validator import EmailNotValidError
 from exceptionClasses import AuthError
 from order import Order
@@ -8,6 +9,7 @@ import mysql.connector
 from botocore.exceptions import ClientError, ParamValidationError
 
 app = Flask(__name__)
+CORS(app) # For Cross Origin Request
 
 @app.errorhandler(404)
 def page_not_found(error):

@@ -46,7 +46,7 @@ h3 {
 	 transform: skewY(390deg);
 }
  .card::after {
-	 content: "TRANSBOT";
+	 content: "Drobot";
 	 position: absolute;
 	 bottom: 0;
 	 left: 0;
