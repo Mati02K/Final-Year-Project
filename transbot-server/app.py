@@ -9,7 +9,7 @@ import mysql.connector
 from botocore.exceptions import ClientError, ParamValidationError
 
 app = Flask(__name__)
-CORS(app) # For Cross Origin Request
+CORS(app) # For Cross Origin Request Shield
 
 @app.errorhandler(404)
 def page_not_found(error):
@@ -31,13 +31,14 @@ def retreive():
 @app.route('/checkout',methods = ['POST'])
 def checkout():
     try:
-        name = request.args.get('name')
-        mobno = request.args.get('mobno')
-        email = request.args.get('email')
-        pid = request.args.get('pid')
-        quantity = request.args.get('quantity')
-        amt = request.args.get('amt')
-        order = Order(name, mobno, email, pid, quantity, amt)
+        name = request.form['name']
+        mobno = request.form['mobno']
+        email = request.form['email']
+        pid = request.form['pid']
+        quantity = request.form['quantity']
+        amt = request.form['amt']
+        location = request.form['location']
+        order = Order(name, mobno, email, pid, quantity, amt, location)
         c = Checkout()
         res = c.add(order)
         return res

@@ -2,7 +2,7 @@ from email_validator import validate_email, EmailNotValidError
 from exceptionClasses import AuthError
 
 class Order:
-    def __init__(self, name, mobno, email, pid, quantity, amt, isDelivered = False):
+    def __init__(self, name, mobno, email, pid, quantity, amt, location, isDelivered = False):
         if len(name) < 2:
             raise AuthError("Please enter a proper name")
         else:
@@ -26,6 +26,8 @@ class Order:
         self.quantity = int(quantity)
 
         self.amt = int(amt)
+
+        self.location = location
 
         self.isDelivered = isDelivered
 

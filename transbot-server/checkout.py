@@ -26,19 +26,19 @@ class Checkout:
             passwd = "!Pkb8*nH6",
             database = "u347396496_drobot"
         )
-        self.MSG_API_URL = "https://www.fast2sms.com/dev/bulk"
-        self.API_KEY = "3aO84tliq1ycM5Hd2Nv9JUZwkXTGjxpPgfWYKLCuzFE7QInsboZrsB8NFW7lLHcfmhuXbGYM9pv13IQ0"
+        self.MSG_API_URL = "https://www.fast2sms.com/dev/bulkV2"
+        self.API_KEY = "QRv6xz4qNBHhLmpPT7bOcdVC3WS2rofKFAs8kEi9egwZIXM15D8dORYvo5hwuTrAPjIxVDFG6cC3XJmM"
 
     def add(self, order):
         self.cursorObject = self.dataBase.cursor()
 
-        sql = "INSERT INTO checkout (name, mobileno, email, pid, quantity, amt, isDelivered, bookedat)\
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+        sql = "INSERT INTO checkout (name, mobileno, email, pid, quantity, amt, location, isDelivered, bookedat)\
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
         timestamp = datetime.datetime.now()
 
         val = (order.name, order.mobno, order.email, order.pid,
-        order.quantity, order.amt, order.isDelivered, timestamp)
+        order.quantity, order.amt, order.location, order.isDelivered, timestamp)
 
         self.cursorObject.execute(sql, val)
         self.cursorObject.close()
