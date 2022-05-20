@@ -26,7 +26,7 @@ const parseData = (productDetails) => {
 };
 
 $(() => {
-    const API_PATH = 'http://43.204.81.69/checkout';
+    const API_PATH = 'https://quasartechsolutions.in/drobotAPI/checkout.php';
     const productDetails = getProductDetails(window.location.href);
     const pid = parseInt(productDetails.pid);
     const priceAmt = parseInt(productDetails.price);
@@ -71,14 +71,6 @@ $(() => {
                     url: API_PATH,
                 }).then((response) => {
                     if (response === 'Success') {
-                        // Initalize the Drobot
-                        const Http = new XMLHttpRequest();
-                        const url='https://maker.ifttt.com/trigger/drobot/json/with/key/nhHxJBXLjWN_vgW_2_b39xXdUj2ZT5524L2Y3hl78Ip';
-                        Http.open('GET', url);
-                        Http.send();
-                        Http.onreadystatechange = (e) => {
-                        console.log(Http.responseText)
-                        }
                         location.replace('placed.html');
                     }
                     else {

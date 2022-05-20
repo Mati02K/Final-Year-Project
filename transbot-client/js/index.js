@@ -1,4 +1,4 @@
-const API_PATH = 'http://43.204.81.69/retreive';
+const API_PATH = 'https://quasartechsolutions.in/drobotAPI/retreive.php';
 
 const connect = (postData) => {
     const jsonData = JSON.stringify(postData);
@@ -14,6 +14,7 @@ const connect = (postData) => {
 
 $(() => {
     connect('').then((response) => {
+        response = JSON.parse(response);
         const products = response.Items;
         let i = 0;
         let productContainer = '';
@@ -45,7 +46,5 @@ $(() => {
             productContainer += '</div>';
         }
         $('#products').append(productContainer);
-        console.log(productContainer);
-        console.log(products);
     });
 });

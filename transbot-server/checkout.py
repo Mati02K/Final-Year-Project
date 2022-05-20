@@ -28,8 +28,17 @@ class Checkout:
         )
         self.MSG_API_URL = "https://www.fast2sms.com/dev/bulkV2"
         self.API_KEY = "QRv6xz4qNBHhLmpPT7bOcdVC3WS2rofKFAs8kEi9egwZIXM15D8dORYvo5hwuTrAPjIxVDFG6cC3XJmM"
+        self.DROBOT_URL = "https://maker.ifttt.com/trigger/droboton/json/with/key/nhHxJBXLjWN_vgW_2_b39xXdUj2ZT5524L2Y3hl78Ip"
+
+    def startDrobot(self):
+        x = requests.get(self.DROBOT_URL)
+        if (x.status_code == 200):
+            return True
+        return False
 
     def add(self, order):
+        self.startDrobotStatus = self.startDrobot()
+
         self.cursorObject = self.dataBase.cursor()
 
         sql = "INSERT INTO checkout (name, mobileno, email, pid, quantity, amt, location, isDelivered, bookedat)\
