@@ -12,13 +12,17 @@
     <div class="container mt-5">
     <h1> Drobot </h1>
     <h3> Delivery of essential items using a Robot </h3>
-    <div id="products">
-    </div>
-    <a type="button" class="btn btn-primary mt-5 mx-auto otpbut" href="otp.html"> Confirm OTP</a>
+    <h3> Confrim OTP </h3>
+    <label for="orderid">Order ID</label>
+    <input type="text" class="form-control" id="orderid" placeholder="" value="" required>
+    <br>
+    <label for="otp">OTP</label>
+    <input type="text" class="form-control" id="otp" placeholder="" value="" required>
+    <button type="button" id="otpcheck" class="btn-primary mt-5 mx-auto otpbut"> Confirm OTP</button>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/index.js"></script>
+    <script src="js/otp.js"></script>
 </body>
 </html>

@@ -66,3 +66,15 @@ def fetch():
     except mysql.connector.Error as e:
         print(e)
         return e
+
+@app.route('/otp',methods = ['POST'])
+def confrimOTP():
+    try:
+        oid = request.form['oid']
+        otp = request.form['otp']
+        c = Checkout()
+        res = c.checkOTP(oid, otp)
+        return res
+    except AuthError as e:
+        print(e)
+        return e

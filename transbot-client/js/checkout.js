@@ -26,7 +26,7 @@ const parseData = (productDetails) => {
 };
 
 $(() => {
-    const API_PATH = 'https://quasartechsolutions.in/drobotAPI/checkout.php';
+    const API_PATH = 'https://quasarcommunity.org/drobotAPI/checkout.php';
     const productDetails = getProductDetails(window.location.href);
     const pid = parseInt(productDetails.pid);
     const priceAmt = parseInt(productDetails.price);
@@ -70,13 +70,16 @@ $(() => {
                     timeout: 60000,
                     url: API_PATH,
                 }).then((response) => {
-                    if (response === 'Success') {
-                        location.replace('placed.html');
-                    }
-                    else {
-                        alert('Order failed. Please check your entered details or try again after some time.');
-                        console.log("Order failed");
-                    }
+                    // console.log(response);
+                    // console.log(response === 'Success');
+                    location.replace('placed.html');
+                    // if (response === 'Success') {
+                    //     location.replace('placed.html');
+                    // }
+                    // else {
+                    //     alert('Order failed. Please check your entered details or try again after some time.');
+                    //     console.log("Order failed");
+                    // }
                 });
             };
                     

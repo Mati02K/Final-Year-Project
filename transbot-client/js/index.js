@@ -1,4 +1,4 @@
-const API_PATH = 'https://quasartechsolutions.in/drobotAPI/retreive.php';
+const API_PATH = 'https://quasarcommunity.org/drobotAPI/retreive.php';
 
 const connect = (postData) => {
     const jsonData = JSON.stringify(postData);

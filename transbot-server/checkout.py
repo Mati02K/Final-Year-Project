@@ -35,44 +35,14 @@ class Checkout:
         if (x.status_code == 200):
             return True
         return False
-
-    def add(self, order):
-        self.startDrobotStatus = self.startDrobot()
-
-        self.cursorObject = self.dataBase.cursor()
-
-        sql = "INSERT INTO checkout (name, mobileno, email, pid, quantity, amt, location, isDelivered, bookedat)\
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
-
-        timestamp = datetime.datetime.now()
-
-        val = (order.name, order.mobno, order.email, order.pid,
-        order.quantity, order.amt, order.location, order.isDelivered, timestamp)
-
-        self.cursorObject.execute(sql, val)
-        self.cursorObject.close()
-        self.dataBase.commit()
-        self.dataBase.close()
-        return "Success"
-
-    def getLastBookedItem(self):
-        self.cursorObject = self.dataBase.cursor()
-        query = "SELECT mobileno,pid,quantity FROM checkout ORDER BY oid DESC LIMIT 1"
-        self.cursorObject.execute(query)
-        res = self.cursorObject.fetchall()
-        self.dataBase.commit()
-        self.cursorObject.close()
-        return res[0]
-
-    def sendSMS(self, mobileNo):
-        otp = generateOTP(length = 6)
-        msg =  "Your Package has arrived your destination. Your OTP for the order is " + str(otp)
+    
+    def sendSMS(self, mobileNo, msg):
         payload = {'sender_id': 'FSTSMS',
-                   'message': msg,
-                   'language': 'english',
-                   'route': 'p',
-                   'numbers': str(mobileNo)
-                   }
+                    'message': msg,
+                    'language': 'english',
+                    'route': 'p',
+                    'numbers': str(mobileNo)
+                    }
 
         headers = {
             'authorization': self.API_KEY,
@@ -83,6 +53,43 @@ class Checkout:
         result = json.loads(response.text)
         return result['return']
 
+    def getLastBookedItem(self):
+        self.cursorObject = self.dataBase.cursor()
+        query = "SELECT mobileno,pid,quantity,oid FROM checkout ORDER BY oid DESC LIMIT 1"
+        self.cursorObject.execute(query)
+        res = self.cursorObject.fetchall()
+        self.dataBase.commit()
+        self.cursorObject.close()
+        return res[0]
+
+    def add(self, order):
+        self.startDrobotStatus = self.startDrobot()
+
+        self.cursorObject = self.dataBase.cursor()
+
+        sql = "INSERT INTO checkout (name, mobileno, email, pid, quantity, amt, location, OTP, isDelivered, bookedat)\
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+
+        timestamp = datetime.datetime.now()
+
+        val = (order.name, order.mobno, order.email, order.pid,
+        order.quantity, order.amt, order.location, order.otp, order.isDelivered, timestamp)
+
+        self.cursorObject.execute(sql, val)
+        self.cursorObject.close()
+
+        # Send the SMS to the user about the order ID
+        orderdetails = self.getLastBookedItem()
+        orderid = orderdetails[3]
+        msg = "Your Order id is " + str(orderid) + ".Use this ID to confirm the order. Thanks for using DROBOT"
+        res = self.sendSMS(mobileNo = order.mobno, msg = msg)
+        self.dataBase.commit()
+        self.dataBase.close()
+        if res:
+            return "Success"
+        else:
+            raise AuthError("Not able to send SMS")
+
     def update(self):
         # Decrement the stock in Dynamo DB
         p = Products()
@@ -91,17 +98,20 @@ class Checkout:
         pid = details[1]
         count = details[2]
         p.decrement(pid, count = count)
+        
+        otp = generateOTP(length = 6)
 
-        #Then Confirm the Order has been delivered
+        #Then add the OTP no to the order
         self.cursorObject = self.dataBase.cursor()
-        query = "UPDATE checkout SET isDelivered = 1 ORDER BY oid DESC LIMIT 1"
+        query = f"UPDATE checkout SET OTP = {otp} ORDER BY oid DESC LIMIT 1"
         self.cursorObject.execute(query)
         self.cursorObject.close()
         self.dataBase.commit()
         self.dataBase.close()
 
         #Then send SMS
-        res = self.sendSMS(mobileNo = mobno)
+        msg =  "Your Package has arrived your destination. Your OTP for the order is " + str(otp)
+        res = self.sendSMS(mobileNo = mobno, msg = msg)
         if res:
             return "Success"
         else:
@@ -115,3 +125,22 @@ class Checkout:
         self.cursorObject.close()
         output = convert(res)
         return output
+    
+    def checkOTP(self, oid, otp):
+        self.cursorObject = self.dataBase.cursor()
+        query = f"SELECT OTP FROM checkout WHERE oid = {oid}"
+        self.cursorObject.execute(query)
+        res = self.cursorObject.fetchall()
+        self.dataBase.commit()
+        if res[0][0] == otp:
+            #success
+            query = f"UPDATE checkout SET isDelivered = 1 WHERE oid = {oid}"
+            self.cursorObject.execute(query)
+            self.dataBase.commit()
+            self.cursorObject.close()
+            self.dataBase.close()
+            return "Success"
+        
+        self.cursorObject.close()
+        self.dataBase.close()
+        return "Incorrect OTP"

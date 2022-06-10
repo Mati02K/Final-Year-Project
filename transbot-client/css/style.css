@@ -115,4 +115,10 @@ h3 {
 	 height: 300px;
 	 width: auto;
 }
- 
+label {
+	color: #ffce00;
+}
+.otpbut {
+	display: block;
+	font-size: 1.2rem;
+}
