@@ -8,7 +8,7 @@ def convert(results):
     itr = 1
     for result in results:
         result = list(result)
-        result[8] = result[8].strftime("%m/%d/%Y, %H:%M:%S")
+        result[10] = result[10].strftime("%m/%d/%Y, %H:%M:%S")
         details[itr] = result
         itr += 1
     return details
