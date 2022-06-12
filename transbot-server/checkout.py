@@ -81,7 +81,7 @@ class Checkout:
         # Send the SMS to the user about the order ID
         orderdetails = self.getLastBookedItem()
         orderid = orderdetails[3]
-        msg = "Your Order id is " + str(orderid) + ".Use this ID to confirm the order. Thanks for using DROBOT"
+        msg = "Your Order id is " + str(orderid) + ".Use this ID to confirm the order once the Drobot sends you the OTP. Thanks for using DROBOT"
         res = self.sendSMS(mobileNo = order.mobno, msg = msg)
         self.dataBase.commit()
         self.dataBase.close()
@@ -127,12 +127,13 @@ class Checkout:
         return output
     
     def checkOTP(self, oid, otp):
+        otp = int(otp)
         self.cursorObject = self.dataBase.cursor()
         query = f"SELECT OTP FROM checkout WHERE oid = {oid}"
         self.cursorObject.execute(query)
         res = self.cursorObject.fetchall()
         self.dataBase.commit()
-        if res[0][0] == otp:
+        if int(res[0][0]) == otp:
             #success
             query = f"UPDATE checkout SET isDelivered = 1 WHERE oid = {oid}"
             self.cursorObject.execute(query)

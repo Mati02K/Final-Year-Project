@@ -1,4 +1,4 @@
-const API_PATH = 'http://127.0.0.1:5000/fetch';
+const API_PATH = 'http://43.204.81.69/fetch';
 
 const connect = (postData) => {
     const jsonData = JSON.stringify(postData);
@@ -14,7 +14,6 @@ const connect = (postData) => {
 
 
 $(() => {
-    
     $.ajax({
         type: 'POST',
         data: '',
@@ -30,7 +29,13 @@ $(() => {
             const prodid = responses[i][4];
             const qty = responses[i][5];
             const location = responses[i][7];
-            const deliverystatus = responses[i][9];
+            let deliverystatus = responses[i][9];
+            if(deliverystatus === 0){
+                deliverystatus = "Not Delivered";
+            }
+            else {
+                deliverystatus = "Delivered";
+            }
             $('#admintable tbody').append("<tr><td>" + 
             oid + "</td><td>" + name + "</td><td>" +
             mobno+ "</td><td>" + prodid +  "</td><td>" +

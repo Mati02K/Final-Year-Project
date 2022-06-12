@@ -1,4 +1,4 @@
-const API_PATH = 'https://quasarcommunity.org/drobotAPI/retreive.php';
+const API_PATH = 'http://43.204.81.69/otp';
 
 const connect = (postData) => {
     const jsonData = JSON.stringify(postData);
@@ -30,6 +30,8 @@ $(() => {
             }).then((response) => {
                 if(response == 'Success'){
                     alert('Success, the OTP is correct, you will receive the order by the Drobot');
+                    // location.replace('https://quasartechsolutions.in/drobot');
+                    location.replace('index.html');
                 }
                 else {
                     alert('Entered OTP is incorrect');
